@@ -114,7 +114,6 @@ public class TrOrderServiceImpl implements ITrOderService {
             shopBarberEo.setTodayCount(null == shopBarberEo.getTodayCount() ? 1 : shopBarberEo.getTodayCount() + 1);
             shopBarberRepository.save(shopBarberEo);
         }
-
         itShopRepository.save(shopEo);
     }
 

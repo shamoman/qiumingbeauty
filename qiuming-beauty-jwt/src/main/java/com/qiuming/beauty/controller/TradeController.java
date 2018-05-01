@@ -66,10 +66,16 @@ public class TradeController {
 
     @RequestMapping(value = "/order/comment/add", method = RequestMethod.POST)
     public RestResponse orderComment(@RequestBody CommentAddDto commentAddDto) {
-        logger.info("评论 | {}", JSON.toJSONString(commentAddDto));
-
+        logger.info("新增评论 | {}", JSON.toJSONString(commentAddDto));
+        commentService.addComment(commentAddDto);
         return RestResponse.SUCCESS;
+    }
 
+    @RequestMapping(value = "/order/comment/list", method = RequestMethod.POST)
+    public RestResponse orderComment(@RequestParam(value = "shopId") Long shopId) {
+        logger.info("查询评论列表 | {}", shopId);
+        List<CommentAddDto> list = commentService.findCommentList(shopId);
+        return new RestResponse(list);
     }
 
 }

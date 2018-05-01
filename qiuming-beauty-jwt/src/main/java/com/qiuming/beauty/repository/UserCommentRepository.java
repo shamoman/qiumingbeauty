@@ -9,6 +9,8 @@ package com.qiuming.beauty.repository;
 import com.qiuming.beauty.eo.SysUserCommentEo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  *
  * @description: 用户评论Repository
@@ -16,4 +18,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @create: 2018-04-20 21:02
  **/
 public interface UserCommentRepository extends JpaRepository<SysUserCommentEo, Long> {
+    /**
+     * 根据店铺id查询店铺的评论列表
+     * @param shopId - 店铺id
+     * @return
+     */
+    List<SysUserCommentEo> findAllByShopId(Long shopId);
 }

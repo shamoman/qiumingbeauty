@@ -24,5 +24,10 @@ public interface ICommentService {
      */
     void addComment(CommentAddDto addDto);
 
-    List<SysUserCommentEo> findCommentList(Long shopId);
+    /**
+     * 评论列表
+     * @param shopId - 店铺id
+     * @return
+     */
+    List<CommentAddDto> findCommentList(Long shopId);
 }

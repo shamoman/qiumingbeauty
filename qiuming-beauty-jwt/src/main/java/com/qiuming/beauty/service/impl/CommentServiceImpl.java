@@ -15,10 +15,12 @@ import com.qiuming.beauty.service.ICommentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,9 +63,33 @@ public class CommentServiceImpl implements ICommentService {
         userCommentRepository.save(commentEo);
     }
 
-    @Override
-    public List<SysUserCommentEo> findCommentList(Long shopId) {
+    private List<String> getCommentImages(SysUserCommentEo commentEo){
+        List<String> environmentImagelist= new ArrayList<>();
+        if (StringUtils.isEmpty(commentEo.getUrl1()))
+            environmentImagelist.add(commentEo.getUrl1());
+        if (StringUtils.isEmpty(commentEo.getUrl2()))
+            environmentImagelist.add(commentEo.getUrl2());
+        if (StringUtils.isEmpty(commentEo.getUrl3()))
+            environmentImagelist.add(commentEo.getUrl3());
+        return environmentImagelist;
+    }
+    private List<CommentAddDto> transCommenttos(List<SysUserCommentEo> list){
+        List<CommentAddDto> listDtos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(list)){
+            CommentAddDto dto;
+            for (SysUserCommentEo item : list){
+                dto = new CommentAddDto();
+                BeanUtils.copyProperties(item, dto);
+                dto.setCommentImage(getCommentImages(item));
+                listDtos.add(dto);
+            }
+        }
+        return listDtos;
+    }
 
-        return null;
+    @Override
+    public List<CommentAddDto> findCommentList(Long shopId) {
+        List<SysUserCommentEo> commentEos = userCommentRepository.findAllByShopId(shopId);
+        return transCommenttos(commentEos);
     }
 }
