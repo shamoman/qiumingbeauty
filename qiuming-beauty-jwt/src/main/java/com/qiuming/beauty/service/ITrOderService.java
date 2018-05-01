@@ -39,11 +39,21 @@ public interface ITrOderService {
      * @param memberId - 用户id
      * @return
      */
-    public List<OrderListDto> getOrderList(Long memberId);
+    public List<OrderListDto> getOrderList(Integer status, Long memberId);
 
     /**
      * 支付订单
      * @param orderId - 订单id
      */
     public void payOrder(Long orderId);
+    /**
+     * 取消订单
+     * @param orderId - 订单id
+     */
+    public void cancelOrder(Long orderId);
+    /**
+     * 完成订单
+     * @param orderId - 订单id
+     */
+    public void finishOrder(Long orderId);
 }

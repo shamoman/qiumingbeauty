@@ -7,6 +7,7 @@
 package com.qiuming.beauty.service.impl;
 
 import com.qiuming.beauty.constants.Constants;
+import com.qiuming.beauty.constants.OrderStatusEnum;
 import com.qiuming.beauty.dto.AppToPayOrderRespDto;
 import com.qiuming.beauty.dto.OrderDetailDto;
 import com.qiuming.beauty.dto.OrderListDto;
@@ -57,7 +58,7 @@ public class TrOrderServiceImpl implements ITrOderService {
         BeanUtils.copyProperties(dto, orderEo);
         orderEo.setOrderTime(new Date());
         orderEo.setOrderNo(getOrderNo());
-        orderEo.setStatus(0);
+        orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus());
         ItShopEo shopEo = itShopRepository.findOne(dto.getShopId());
         orderEo.setShopName(shopEo.getShopName());
         trOrderRepository.save(orderEo);
@@ -78,10 +79,16 @@ public class TrOrderServiceImpl implements ITrOderService {
     }
 
     @Override
-    public List<OrderListDto> getOrderList(Long memberId) {
+    public List<OrderListDto> getOrderList(Integer status, Long memberId) {
 //        return trOrderRepository.findAllByMemberId(memberId);
         List<OrderListDto> listDtos = new ArrayList<>();
-        List<TrOrderEo> orderEoList = trOrderRepository.findAll();
+
+        List<TrOrderEo> orderEoList;
+        if (null != status) {
+            orderEoList = trOrderRepository.findAllByMemberIdAndStatus(memberId, status);
+        } else {
+            orderEoList = trOrderRepository.findAllByMemberId(memberId);
+        }
         if (!CollectionUtils.isEmpty(orderEoList)){
             OrderListDto dto;
             ItItemEo itemEo;
@@ -102,7 +109,7 @@ public class TrOrderServiceImpl implements ITrOderService {
     @Override
     public void payOrder(Long orderId) {
         TrOrderEo orderEo = trOrderRepository.findOne(orderId);
-        orderEo.setStatus(2);
+        orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_PAY.getStatus());
         orderEo.setPayTime(new Date());
         trOrderRepository.save(orderEo);
         ItShopEo shopEo = itShopRepository.findOne(orderEo.getShopId());
@@ -115,6 +122,25 @@ public class TrOrderServiceImpl implements ITrOderService {
             shopBarberRepository.save(shopBarberEo);
         }
         itShopRepository.save(shopEo);
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        TrOrderEo orderEo = trOrderRepository.findOne(orderId);
+        if (!OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus().equals(orderEo.getStatus())){
+            throw new RuntimeException("订单不能取消");
+        }
+        orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_CANCEL.getStatus());
+        orderEo.setPayTime(new Date());
+        trOrderRepository.save(orderEo);
+    }
+
+    @Override
+    public void finishOrder(Long orderId) {
+        TrOrderEo orderEo = trOrderRepository.findOne(orderId);
+        orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_FINISH.getStatus());
+        orderEo.setPayTime(new Date());
+        trOrderRepository.save(orderEo);
     }
 
     private String getOrderNo(){
@@ -130,6 +156,7 @@ public class TrOrderServiceImpl implements ITrOderService {
         logger.info("当前订单号2 | {}", orderFlow);
         return orderFlow;
     }
+
     public static String getCurrentTimeNum() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         Date d = new Date();

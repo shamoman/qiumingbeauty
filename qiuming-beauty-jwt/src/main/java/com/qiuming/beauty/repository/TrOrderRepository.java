@@ -9,6 +9,7 @@ package com.qiuming.beauty.repository;
 import com.qiuming.beauty.eo.TrOrderEo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,4 +25,19 @@ public interface TrOrderRepository  extends JpaRepository<TrOrderEo, Long> {
      * @return
      */
     List<TrOrderEo> findAllByMemberId(Long memberId);
+
+    /**
+     * 根据状态及用户id查询订单列表
+     * @param memberId - 用户id
+     * @param status - 状态
+     * @return
+     */
+    List<TrOrderEo> findAllByMemberIdAndStatus(Long memberId, Integer status);
+
+    /**
+     * 根据订单状态查询
+     * @param status - 状态
+     * @return
+     */
+    List<TrOrderEo> findAllByStatusAndOrderTimeBefore(Integer status, Date date);
 }
