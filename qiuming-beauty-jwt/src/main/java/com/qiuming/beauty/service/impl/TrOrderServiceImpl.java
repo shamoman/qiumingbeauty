@@ -131,7 +131,8 @@ public class TrOrderServiceImpl implements ITrOderService {
             throw new RuntimeException("订单不能取消");
         }
         orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_CANCEL.getStatus());
-        orderEo.setPayTime(new Date());
+        orderEo.setCancelTime(new Date());
+        orderEo.setCancelType("不想要了");
         trOrderRepository.save(orderEo);
     }
 
@@ -139,7 +140,7 @@ public class TrOrderServiceImpl implements ITrOderService {
     public void finishOrder(Long orderId) {
         TrOrderEo orderEo = trOrderRepository.findOne(orderId);
         orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_FINISH.getStatus());
-        orderEo.setPayTime(new Date());
+        orderEo.setFinishTime(new Date());
         trOrderRepository.save(orderEo);
     }
 

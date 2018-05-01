@@ -88,8 +88,10 @@ public class TradeController {
     @RequestMapping(value = "/order/comment/add", method = RequestMethod.POST)
     public RestResponse orderComment(@RequestBody CommentAddDto commentAddDto) {
         logger.info("新增评论 | {}", JSON.toJSONString(commentAddDto));
-        if (null == commentAddDto || null == commentAddDto.getShopId() || null == commentAddDto.getOrderId())
-            commentAddDto.setAccountId(1l);
+        if (null == commentAddDto || null == commentAddDto.getShopId() || null == commentAddDto.getOrderId()){
+
+        }
+        commentAddDto.setAccountId(1l);
         commentService.addComment(commentAddDto);
         return RestResponse.SUCCESS;
     }
