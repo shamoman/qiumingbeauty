@@ -1,6 +1,7 @@
 package com.qiuming.beauty.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.qiuming.beauty.dto.CommentAddDto;
 import com.qiuming.beauty.dto.OrderSubmitDto;
 import com.qiuming.beauty.dto.RestResponse;
 import com.qiuming.beauty.dto.UserDto;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -32,7 +34,13 @@ public class HelloController {
     }
 
     public static void main(String[] args) {
-
+        CommentAddDto commentAddDto = new CommentAddDto();
+        commentAddDto.setCommentImage(new ArrayList<>());
+        commentAddDto.setOrderId(1l);
+        commentAddDto.setRemark("店长很热心，洗头很舒服，造型也很合适，5星");
+        commentAddDto.setScore(new BigDecimal(5));
+        commentAddDto.setShopId(1l);
+        System.out.println(JSON.toJSONString(commentAddDto));
         OrderSubmitDto orderSubmitDto = new OrderSubmitDto();
         orderSubmitDto.setItemId(1L);
         orderSubmitDto.setShopId(13L);

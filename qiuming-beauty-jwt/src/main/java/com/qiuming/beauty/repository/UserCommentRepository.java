@@ -7,6 +7,7 @@
 package com.qiuming.beauty.repository;
 
 import com.qiuming.beauty.eo.SysUserCommentEo;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface UserCommentRepository extends JpaRepository<SysUserCommentEo, L
      * @param shopId - 店铺id
      * @return
      */
-    List<SysUserCommentEo> findAllByShopId(Long shopId);
+    List<SysUserCommentEo> findAllByShopId(Long shopId, Sort sort);
 }

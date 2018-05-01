@@ -81,15 +81,15 @@ public class TradeController {
         if (null == orderDto || null == orderDto.getOrderId()){
             return new RestResponse(-1, "参数异常");
         }
-        trOderService.cancelOrder(orderDto.getOrderId());
+        trOderService.finishOrder(orderDto.getOrderId());
         return RestResponse.SUCCESS;
     }
 
     @RequestMapping(value = "/order/comment/add", method = RequestMethod.POST)
-    public RestResponse orderComment(@RequestBody CommentAddDto commentAddDto) {
+    public RestResponse addOrderComment(@RequestBody CommentAddDto commentAddDto) {
         logger.info("新增评论 | {}", JSON.toJSONString(commentAddDto));
         if (null == commentAddDto || null == commentAddDto.getShopId() || null == commentAddDto.getOrderId()){
-
+            return new RestResponse(-1, "参数异常");
         }
         commentAddDto.setAccountId(1l);
         commentService.addComment(commentAddDto);
@@ -97,7 +97,7 @@ public class TradeController {
     }
 
     @RequestMapping(value = "/order/comment/list", method = RequestMethod.GET)
-    public RestResponse orderComment(@RequestParam(value = "shopId") Long shopId) {
+    public RestResponse shopCommentList(@RequestParam(value = "shopId") Long shopId) {
         logger.info("查询评论列表 | {}", shopId);
         List<CommentAddDto> list = commentService.findCommentList(shopId);
         return new RestResponse(list);

@@ -66,6 +66,8 @@ public class ShopListDto {
     /** 优惠金额*/
     private BigDecimal coupon;
 
+    private BigDecimal commentScore;
+
     private byte[] shopImage;
     private Long id;
     /** 图片 */
@@ -261,5 +263,13 @@ public class ShopListDto {
 
     public void setCoupon(BigDecimal coupon) {
         this.coupon = coupon;
+    }
+
+    public BigDecimal getCommentScore() {
+        return commentScore;
+    }
+
+    public void setCommentScore(BigDecimal commentScore) {
+        this.commentScore = commentScore;
     }
 }

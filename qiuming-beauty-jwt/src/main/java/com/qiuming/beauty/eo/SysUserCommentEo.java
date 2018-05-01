@@ -31,6 +31,8 @@ public class SysUserCommentEo extends BaseEo {
     private Long itemName;
     @Column(name = "item_title")
     private String itemTitle;
+    @Column(name = "remark")
+    private String remark;
     @Column(name = "content")
     private String content;
     @Column(name = "score")
@@ -137,5 +139,13 @@ public class SysUserCommentEo extends BaseEo {
 
     public void setUrl3(String url3) {
         this.url3 = url3;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

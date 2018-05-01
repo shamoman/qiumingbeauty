@@ -1,6 +1,7 @@
 package com.qiuming.beauty.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.qiuming.beauty.constants.Constants;
 import com.qiuming.beauty.domain.SysUser;
 import com.qiuming.beauty.dto.RegisterDto;
 import com.qiuming.beauty.dto.UserDto;
@@ -51,6 +52,7 @@ public class MemberServiceImpl implements IMemberService {
         SysUserInfoEo infoEo = new SysUserInfoEo();
         infoEo.setRealName(dto.getRealName());
         infoEo.setAccountId(sysUser.getId());
+        infoEo.setAvatarUrl(Constants.AVURATE_URL);
         sysUserInfoRepository.save(infoEo);
     }
 

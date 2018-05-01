@@ -58,6 +58,16 @@ public class MemberController {
         return  new RestResponse(-1, "该用户名已经注册！");
     }
 
+    @RequestMapping(value = "/update",method = RequestMethod.PUT)
+    public RestResponse updateMemberInfo(@RequestBody UserDto userDto) {
+        if (null == userDto){
+            return new RestResponse(-1, "参数异常");
+        }
+        userDto.setAccountId(1l);
+        memberService.updateUserDetail(userDto);
+        return  new RestResponse(-1, "该用户名已经注册！");
+    }
+
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     @CrossOrigin
     public RestResponse register(@RequestBody RegisterDto dto) {
