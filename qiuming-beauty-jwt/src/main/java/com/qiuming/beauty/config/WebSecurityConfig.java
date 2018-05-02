@@ -33,11 +33,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/shop/**").permitAll()
                 .antMatchers("/**/username/exit").permitAll()
                 .antMatchers("/**/order/**").permitAll()
+                .antMatchers("/**/login/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // We filter the api/login requests
-                .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
+//                        UsernamePasswordAuthenticationFilter.class)
                 // And filter other requests to check the presence of JWT in header
                 .addFilterBefore(new JWTAuthenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);

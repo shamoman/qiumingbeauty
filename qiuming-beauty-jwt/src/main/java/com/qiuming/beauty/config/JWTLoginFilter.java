@@ -35,9 +35,9 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(
             HttpServletRequest req, HttpServletResponse res)
             throws AuthenticationException, IOException, ServletException {
-//        if (!req.getMethod().equalsIgnoreCase(RequestMethod.POST.name())){
-//            return null;
-//        }
+       /* if (!req.getMethod().equalsIgnoreCase(RequestMethod.POST.name())){
+            return null;
+        }*/
         SysUser creds = new ObjectMapper()
                 .readValue(req.getInputStream(), SysUser.class);
 
