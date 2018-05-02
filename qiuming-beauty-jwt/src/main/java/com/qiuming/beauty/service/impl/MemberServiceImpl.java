@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: 用户信息Service层
@@ -85,5 +86,10 @@ public class MemberServiceImpl implements IMemberService {
         infoEo.setId(infoEo.getId());
         infoEo.setAvatarUrl(dto.avatarUrl);
         sysUserInfoRepository.save(infoEo);
+    }
+
+    @Override
+    public List<SysUser> findAllUser() {
+        return sysUserRepository.findAll();
     }
 }

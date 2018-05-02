@@ -4,6 +4,8 @@ import com.qiuming.beauty.domain.SysUser;
 import com.qiuming.beauty.dto.RegisterDto;
 import com.qiuming.beauty.dto.UserDto;
 
+import java.util.List;
+
 /**
  * @(#)${file_name} 1.0 ${date}
  * <p>
@@ -57,4 +59,10 @@ public interface IMemberService {
      * @param dto - 用户详情dto
      */
     public void updateUserDetail(UserDto dto);
+
+    /**
+     * 查询所有用户列表
+     * @return
+     */
+    public List<SysUser> findAllUser();
 }

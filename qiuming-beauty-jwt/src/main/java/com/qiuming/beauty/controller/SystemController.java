@@ -7,12 +7,14 @@
 package com.qiuming.beauty.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.qiuming.beauty.domain.SysUser;
 import com.qiuming.beauty.dto.RestResponse;
 import com.qiuming.beauty.dto.ShopAddDto;
 import com.qiuming.beauty.dto.ShopListDto;
 import com.qiuming.beauty.eo.ItItemEo;
 import com.qiuming.beauty.eo.ItShopBarberEo;
 import com.qiuming.beauty.service.IItItemService;
+import com.qiuming.beauty.service.IMemberService;
 import com.qiuming.beauty.service.IShopBarberService;
 import com.qiuming.beauty.service.IShopService;
 import org.slf4j.Logger;
@@ -41,6 +43,8 @@ public class SystemController {
     private IShopBarberService shopBarberService;
     @Resource
     private IItItemService iItItemService;
+    @Resource
+    private IMemberService memberService;
 
     /**
      * 运营后台-新增店铺
@@ -154,6 +158,15 @@ public class SystemController {
         List<ItItemEo> list = iItItemService.findItemList(shopId);
         Map result = new HashMap();
         result.put("list", list);
+        return new RestResponse(result);
+    }
+
+    @RequestMapping(value = "/member/list",method = RequestMethod.GET)
+    public RestResponse findUserList(){
+        logger.info("查询用户列表 | {}");
+        List<SysUser> sysUsers = memberService.findAllUser();
+        Map result = new HashMap();
+        result.put("list", sysUsers);
         return new RestResponse(result);
     }
 
