@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/register").permitAll()
                 .antMatchers("/**/shop/**").permitAll()
                 .antMatchers("/**/username/exit").permitAll()
-                .antMatchers("/**/order/**").permitAll()
+//                .antMatchers("/**/order/**").permitAll()
                 .antMatchers("/**/login/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -59,11 +59,12 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/update",method = RequestMethod.PUT)
-    public RestResponse updateMemberInfo(@RequestBody UserDto userDto) {
+    public RestResponse updateMemberInfo(HttpServletRequest request, @RequestBody UserDto userDto) {
         if (null == userDto){
             return new RestResponse(-1, "参数异常");
         }
-        userDto.setAccountId(1l);
+        Long userId = TokenAuthenticationService.getUserId(request);
+        userDto.setAccountId(userId);
         memberService.updateUserDetail(userDto);
         return  new RestResponse(-1, "该用户名已经注册！");
     }

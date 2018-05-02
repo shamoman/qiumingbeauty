@@ -7,6 +7,7 @@
 package com.qiuming.beauty.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.qiuming.beauty.config.TokenAuthenticationService;
 import com.qiuming.beauty.dto.*;
 import com.qiuming.beauty.eo.TrOrderEo;
 import com.qiuming.beauty.service.ICommentService;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,9 +38,10 @@ public class TradeController {
     private ICommentService commentService;
 
     @RequestMapping(value = "/order/submit", method = RequestMethod.POST)
-    public RestResponse submitOrder(@RequestBody OrderSubmitDto submitDto) {
+    public RestResponse submitOrder(HttpServletRequest request, @RequestBody OrderSubmitDto submitDto) {
         logger.info("提交订单信息 | {}", JSON.toJSONString(submitDto));
-        submitDto.setMemberId(1l);
+        Long userId = TokenAuthenticationService.getUserId(request);
+        submitDto.setMemberId(userId);
         AppToPayOrderRespDto dto = trOderService.submitOrder(submitDto);
         return new RestResponse(dto);
     }
@@ -51,9 +54,10 @@ public class TradeController {
     }
 
     @RequestMapping(value = "/order/list", method = RequestMethod.GET)
-    public RestResponse findMyOrderList(Integer status) {
+    public RestResponse findMyOrderList(HttpServletRequest request, Integer status) {
         logger.info("查询我的订单列表 | status {}", status);
-        List<OrderListDto> list = trOderService.getOrderList(status, 1l);
+        Long userId = TokenAuthenticationService.getUserId(request);
+        List<OrderListDto> list = trOderService.getOrderList(status, userId);
         return new RestResponse(list);
     }
     @RequestMapping(value = "/order/pay", method = RequestMethod.POST)
@@ -86,12 +90,13 @@ public class TradeController {
     }
 
     @RequestMapping(value = "/order/comment/add", method = RequestMethod.POST)
-    public RestResponse addOrderComment(@RequestBody CommentAddDto commentAddDto) {
+    public RestResponse addOrderComment(HttpServletRequest request, @RequestBody CommentAddDto commentAddDto) {
         logger.info("新增评论 | {}", JSON.toJSONString(commentAddDto));
         if (null == commentAddDto || null == commentAddDto.getShopId() || null == commentAddDto.getOrderId()){
             return new RestResponse(-1, "参数异常");
         }
-        commentAddDto.setAccountId(1l);
+        Long userId = TokenAuthenticationService.getUserId(request);
+        commentAddDto.setAccountId(userId);
         commentService.addComment(commentAddDto);
         return RestResponse.SUCCESS;
     }
