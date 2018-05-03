@@ -63,4 +63,10 @@ public interface IShopService {
      * @return
      */
     public List<ShopListDto> findShopListByParams(ShopListRequestDto dto);
+
+    /**
+     * 根据店铺评分倒叙
+     * @return
+     */
+    public List<ShopListDto> findShopListOrderByCommonScore();
 }

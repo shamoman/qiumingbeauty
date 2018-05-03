@@ -59,4 +59,10 @@ public class ShopController {
         return new RestResponse(detailDto);
     }
 
+    @RequestMapping(value = "/show",method = RequestMethod.GET)
+    public RestResponse show(){
+        List<ShopListDto> listDtos = shopService.findShopListOrderByCommonScore();
+        return new RestResponse(listDtos);
+    }
+
 }

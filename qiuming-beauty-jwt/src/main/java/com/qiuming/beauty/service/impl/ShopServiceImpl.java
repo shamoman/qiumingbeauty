@@ -72,6 +72,7 @@ public class ShopServiceImpl implements IShopService {
                 }
             }
         }
+        itShopEo.setCommentScore(new BigDecimal(0));
         itShopEo.setCreateTime(new Date());
         itShopEo.setUpdateTime(new Date());
         itShopEo.setCommentCount(0l);
@@ -198,6 +199,13 @@ public class ShopServiceImpl implements IShopService {
             }
         };
         List<ItShopEo> list =  itShopRepository.findAll(querySpecifi, sortx);
+        return transShopDtos(list);
+    }
+
+    @Override
+    public List<ShopListDto> findShopListOrderByCommonScore() {
+        Sort sortx = new Sort(new Sort.Order(Sort.Direction.DESC,"commentScore"));
+        List<ItShopEo> list = itShopRepository.findAll(sortx);
         return transShopDtos(list);
     }
 }
