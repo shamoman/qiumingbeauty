@@ -64,8 +64,7 @@ public class MemberServiceImpl implements IMemberService {
 
     @Override
     public void resetPwd(Long accountId, String password) {
-        SysUser sysUser = new SysUser();
-        sysUser.setId(accountId);
+        SysUser sysUser = sysUserRepository.findOne(accountId);
         sysUser.setPassword(password);
         sysUserRepository.save(sysUser);
     }
