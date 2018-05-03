@@ -18,7 +18,7 @@ public class PasswordDto extends BaseVo {
 
     private String password;
 
-    private String comfirmPwd;
+    private String confirmPwd;
 
     public String getOldPassword() {
         return oldPassword;
@@ -36,11 +36,11 @@ public class PasswordDto extends BaseVo {
         this.password = password;
     }
 
-    public String getComfirmPwd() {
-        return comfirmPwd;
+    public String getConfirmPwd() {
+        return confirmPwd;
     }
 
-    public void setComfirmPwd(String comfirmPwd) {
-        this.comfirmPwd = comfirmPwd;
+    public void setConfirmPwd(String confirmPwd) {
+        this.confirmPwd = confirmPwd;
     }
 }
