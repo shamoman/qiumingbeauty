@@ -66,7 +66,7 @@ public class MemberController {
         Long userId = TokenAuthenticationService.getUserId(request);
         userDto.setAccountId(userId);
         memberService.updateUserDetail(userDto);
-        return  new RestResponse(-1, "该用户名已经注册！");
+        return  RestResponse.SUCCESS;
     }
 
     @RequestMapping(value = "/update/password",method = RequestMethod.PUT)

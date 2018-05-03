@@ -12,6 +12,7 @@ import com.qiuming.beauty.service.IMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -79,11 +80,17 @@ public class MemberServiceImpl implements IMemberService {
     @Override
     public void updateUserDetail(UserDto dto) {
         SysUser sysUser = sysUserRepository.findOne(dto.accountId);
-        sysUser.setMobile(dto.getMobile());
+        if (!StringUtils.isEmpty(dto.getMobile())) {
+            sysUser.setMobile(dto.getMobile());
+        }
         SysUserInfoEo infoEo = sysUserInfoRepository.findSysUserInfoEoByAccountId(dto.getAccountId());
-        infoEo.setNickName(dto.getUsername());
+        if (!StringUtils.isEmpty(dto.getRealName())) {
+            infoEo.setRealName(dto.getRealName());
+        }
         infoEo.setId(infoEo.getId());
-        infoEo.setAvatarUrl(dto.avatarUrl);
+        if (null != dto.getAvatarUrl()) {
+            infoEo.setAvatarUrl(dto.avatarUrl);
+        }
         sysUserInfoRepository.save(infoEo);
     }
 
