@@ -47,6 +47,8 @@ public class MemberController {
         return  new RestResponse(dto);
     }
 
+
+
     @RequestMapping(value = "/username/exit",method = RequestMethod.GET)
     public RestResponse getMemberInfo(String username) {
         SysUser sysUser = memberService.getMemberInfoByUserName(username);
@@ -75,7 +77,7 @@ public class MemberController {
         Long userId = TokenAuthenticationService.getUserId(request);
         SysUser userDto = memberService.getMemberInfoById(userId);
 
-        if (StringUtils.isEmpty(passwordDto.getConfirmPwd()) || !passwordDto.getConfirmPwd().equals(passwordDto.getOldPassword())){
+        if (StringUtils.isEmpty(passwordDto.getConfirmPwd()) || !passwordDto.getConfirmPwd().equals(passwordDto.getPassword())){
             return new RestResponse(-1, "两次密码输入不一致");
         }
         if (null == passwordDto.getPassword()){
