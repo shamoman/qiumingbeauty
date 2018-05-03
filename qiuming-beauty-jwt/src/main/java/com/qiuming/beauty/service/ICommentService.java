@@ -30,4 +30,12 @@ public interface ICommentService {
      * @return
      */
     List<CommentAddDto> findCommentList(Long shopId);
+
+    /**
+     * 用户已评论过不能再次评论
+     * @param orderId - 订单id
+     * @param memberId - 用户id
+     * @return
+     */
+    List<SysUserCommentEo> findCommentBymemberIdAndOrderId(Long orderId, Long memberId);
 }

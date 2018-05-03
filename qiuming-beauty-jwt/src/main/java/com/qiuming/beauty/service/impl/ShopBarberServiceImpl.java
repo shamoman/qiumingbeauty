@@ -27,6 +27,7 @@ public class ShopBarberServiceImpl implements IShopBarberService {
     private ShopBarberRepository shopBarberRepository;
     @Override
     public void addShopBarber(ItShopBarberEo eo) {
+        eo.setOrderCount(0);
         shopBarberRepository.save(eo);
     }
 

@@ -51,6 +51,7 @@ public class CommentServiceImpl implements ICommentService {
         BigDecimal scoreAdded =  score.add(commentAddDto.getScore());
         BigDecimal scoreDivied = scoreAdded.divide(new BigDecimal(shopEo.getCommentCount()));
         shopEo.setCommentScore(scoreDivied);
+        shopEo.setCommentCount(null == shopEo.getCommentCount() ? 1 : shopEo.getCommentCount() + 1);
         List<String> images = commentAddDto.getCommentImage();
         if (!CollectionUtils.isEmpty(images)) {
             for (int i =0 ; i < images.size(); i++) {
@@ -63,6 +64,7 @@ public class CommentServiceImpl implements ICommentService {
                 }
             }
         }
+        itShopRepository.save(shopEo);
         userCommentRepository.save(commentEo);
     }
 
@@ -96,5 +98,10 @@ public class CommentServiceImpl implements ICommentService {
         List<SysUserCommentEo> commentEos = userCommentRepository.findAllByShopId(shopId, sort);
 
         return transCommenttos(commentEos);
+    }
+
+    @Override
+    public List<SysUserCommentEo> findCommentBymemberIdAndOrderId(Long orderId, Long memberId) {
+        return userCommentRepository.findAllByAccountIdAndOrderId(memberId, orderId);
     }
 }

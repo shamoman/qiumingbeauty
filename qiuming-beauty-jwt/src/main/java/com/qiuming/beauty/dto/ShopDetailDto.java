@@ -54,6 +54,13 @@ public class ShopDetailDto {
      */
     private BigDecimal commentScore;
 
+    private Long watchCount;
+    /** 销量 */
+    private Long saleCount;
+
+    /** 评论总数 */
+    private Long commentCount;
+
     List<byte[]> environmentImageList;
 
     private byte[] shopImage;
@@ -226,5 +233,29 @@ public class ShopDetailDto {
 
     public void setCommentScore(BigDecimal commentScore) {
         this.commentScore = commentScore;
+    }
+
+    public Long getWatchCount() {
+        return watchCount;
+    }
+
+    public void setWatchCount(Long watchCount) {
+        this.watchCount = watchCount;
+    }
+
+    public Long getSaleCount() {
+        return saleCount;
+    }
+
+    public void setSaleCount(Long saleCount) {
+        this.saleCount = saleCount;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
     }
 }

@@ -8,18 +8,13 @@ package com.qiuming.beauty.service.impl;
 
 import com.qiuming.beauty.constants.Constants;
 import com.qiuming.beauty.constants.OrderStatusEnum;
-import com.qiuming.beauty.dto.AppToPayOrderRespDto;
-import com.qiuming.beauty.dto.OrderDetailDto;
-import com.qiuming.beauty.dto.OrderListDto;
-import com.qiuming.beauty.dto.OrderSubmitDto;
-import com.qiuming.beauty.eo.ItItemEo;
-import com.qiuming.beauty.eo.ItShopBarberEo;
-import com.qiuming.beauty.eo.ItShopEo;
-import com.qiuming.beauty.eo.TrOrderEo;
+import com.qiuming.beauty.dto.*;
+import com.qiuming.beauty.eo.*;
 import com.qiuming.beauty.repository.ItItemRepository;
 import com.qiuming.beauty.repository.ItShopRepository;
 import com.qiuming.beauty.repository.ShopBarberRepository;
 import com.qiuming.beauty.repository.TrOrderRepository;
+import com.qiuming.beauty.service.ICommentService;
 import com.qiuming.beauty.service.ITrOderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
  * @description: 订单service
  * @author: ji.shamo
  * @create: 2018-04-30 17:39
@@ -42,6 +36,8 @@ import java.util.List;
 @Service("trOrderService")
 public class TrOrderServiceImpl implements ITrOderService {
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Resource
     private TrOrderRepository trOrderRepository;
     @Resource
@@ -50,6 +46,8 @@ public class TrOrderServiceImpl implements ITrOderService {
     private ShopBarberRepository shopBarberRepository;
     @Resource
     private ItShopRepository itShopRepository;
+    @Resource
+    private ICommentService commentService;
 
     @Override
     public AppToPayOrderRespDto submitOrder(OrderSubmitDto dto) {
@@ -71,10 +69,13 @@ public class TrOrderServiceImpl implements ITrOderService {
 
     @Override
     public OrderDetailDto getOrderDetaii(Long orderId) {
-       TrOrderEo orderEo = trOrderRepository.findOne(orderId);
-       OrderDetailDto detailDto = new OrderDetailDto();
-       BeanUtils.copyProperties(orderEo, detailDto);
-       return detailDto;
+        TrOrderEo orderEo = trOrderRepository.findOne(orderId);
+        OrderDetailDto detailDto = new OrderDetailDto();
+        BeanUtils.copyProperties(orderEo, detailDto);
+        detailDto.setOrderTimeStr(null == orderEo.getOrderTime() ? null : sdf.format(orderEo.getOrderTime()));
+        detailDto.setCancelTimeStr(null == orderEo.getCancelTime() ? null : sdf.format(orderEo.getCancelTime()));
+        detailDto.setFinishTimeStr(null == orderEo.getFinishTime() ? null : sdf.format(orderEo.getFinishTime()));
+        return detailDto;
     }
 
     @Override
@@ -88,14 +89,23 @@ public class TrOrderServiceImpl implements ITrOderService {
         } else {
             orderEoList = trOrderRepository.findAllByMemberId(memberId);
         }
-        if (!CollectionUtils.isEmpty(orderEoList)){
+        if (!CollectionUtils.isEmpty(orderEoList)) {
             OrderListDto dto;
             ItItemEo itemEo;
-            for (TrOrderEo item : orderEoList){
+            for (TrOrderEo item : orderEoList) {
                 dto = new OrderListDto();
                 BeanUtils.copyProperties(item, dto);
+                List<SysUserCommentEo> list = commentService.findCommentBymemberIdAndOrderId(memberId, item.getId());
+                if (!CollectionUtils.isEmpty(list)) {
+                    dto.setDoComment(false);
+                } else {
+                    dto.setDoComment(true);
+                }
+                dto.setOrderTimeStr(null == item.getOrderTime() ? null : sdf.format(item.getOrderTime()));
+                dto.setCancelTimeStr(null == item.getCancelTime() ? null : sdf.format(item.getCancelTime()));
+                dto.setFinishTimeStr(null == item.getFinishTime() ? null : sdf.format(item.getFinishTime()));
                 itemEo = itItemRepository.findOne(item.getItemId());
-                if (null != itemEo){
+                if (null != itemEo) {
                     dto.setItemImage(itemEo.getUrl1());
                     dto.setItemName(itemEo.getName());
                 }
@@ -126,7 +136,7 @@ public class TrOrderServiceImpl implements ITrOderService {
     @Override
     public void cancelOrder(Long orderId) {
         TrOrderEo orderEo = trOrderRepository.findOne(orderId);
-        if (!OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus().equals(orderEo.getStatus())){
+        if (!OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus().equals(orderEo.getStatus())) {
             throw new RuntimeException("订单不能取消");
         }
         orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_CANCEL.getStatus());
@@ -143,15 +153,15 @@ public class TrOrderServiceImpl implements ITrOderService {
         trOrderRepository.save(orderEo);
     }
 
-    private String getOrderNo(){
+    private String getOrderNo() {
         logger.info("当前订单号1 | {}", Constants.ORDER_NUMBER);
         String memberCnNo = "CN" + String.format("%08d", Constants.ORDER_NUMBER);
-        Constants.setOrderNumber(Constants.ORDER_NUMBER ++);
+        Constants.setOrderNumber(Constants.ORDER_NUMBER++);
         logger.info("当前订单号2 | {}", Constants.ORDER_NUMBER);
         return memberCnNo;
     }
 
-    private String getOrderPayFlowNo(){
+    private String getOrderPayFlowNo() {
         String orderFlow = getCurrentTimeNum() + String.format("%03d", Constants.ORDER_NUMBER);
         logger.info("当前订单号2 | {}", orderFlow);
         return orderFlow;

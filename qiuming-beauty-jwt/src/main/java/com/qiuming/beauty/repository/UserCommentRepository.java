@@ -25,4 +25,12 @@ public interface UserCommentRepository extends JpaRepository<SysUserCommentEo, L
      * @return
      */
     List<SysUserCommentEo> findAllByShopId(Long shopId, Sort sort);
+
+    /**
+     * 查询用户是否已评论该订单
+     * @param accountId - 用户id
+     * @param orderId - 订单id
+     * @return
+     */
+    List<SysUserCommentEo> findAllByAccountIdAndOrderId(Long accountId, Long orderId);
 }

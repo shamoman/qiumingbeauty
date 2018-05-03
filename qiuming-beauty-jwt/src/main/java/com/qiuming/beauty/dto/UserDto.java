@@ -43,10 +43,10 @@ public class UserDto {
     public UserDto(SysUser user, SysUserInfoEo infoEo) {
         this.accountId = user.getId();
         this.username = user.getUsername();
-        this.mobile = user.getMobile();
-        this.createTime = user.getCreateTime();
-        this.avatarUrl = infoEo.getAvatarUrl();
-        this.realName = infoEo.getRealName();
+        this.mobile = null != user.getMobile() ? user.getMobile() : null;
+        this.createTime = null != user.getCreateTime() ? user.getCreateTime() : null;
+        this.avatarUrl = null != infoEo.getAvatarUrl() ? infoEo.getAvatarUrl() : null;
+        this.realName = null != infoEo.getRealName() ? infoEo.getRealName() : null;
     }
 
     public UserDto() {

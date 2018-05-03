@@ -55,6 +55,7 @@ public class ShopController {
     @RequestMapping(value = "/detail",method = RequestMethod.GET)
     public RestResponse showDetail(@RequestParam(value = "shopId") Long shopId){
         ShopDetailDto detailDto = shopService.getShopById(shopId);
+
         return new RestResponse(detailDto);
     }
 

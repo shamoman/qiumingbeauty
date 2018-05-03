@@ -14,7 +14,7 @@ package com.qiuming.beauty.constants;
  **/
 public class Constants {
 
-    public final static String DEFAULT_PASSWORD = "aa123456";
+    public final static String DEFAULT_PASSWORD = "00000000";
 
     public final static String ADMIN = "admin";
 

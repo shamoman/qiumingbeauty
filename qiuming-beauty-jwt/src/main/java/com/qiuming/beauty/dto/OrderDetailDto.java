@@ -16,4 +16,33 @@ import com.qiuming.beauty.eo.TrOrderEo;
  **/
 public class OrderDetailDto extends TrOrderEo {
 
+    private String orderTimeStr;
+
+    private String finishTimeStr;
+
+    private String cancelTimeStr;
+
+    public String getOrderTimeStr() {
+        return orderTimeStr;
+    }
+
+    public void setOrderTimeStr(String orderTimeStr) {
+        this.orderTimeStr = orderTimeStr;
+    }
+
+    public String getFinishTimeStr() {
+        return finishTimeStr;
+    }
+
+    public void setFinishTimeStr(String finishTimeStr) {
+        this.finishTimeStr = finishTimeStr;
+    }
+
+    public String getCancelTimeStr() {
+        return cancelTimeStr;
+    }
+
+    public void setCancelTimeStr(String cancelTimeStr) {
+        this.cancelTimeStr = cancelTimeStr;
+    }
 }

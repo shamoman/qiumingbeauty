@@ -51,6 +51,10 @@ public class ItShopEo{
     @Column(name = "sales_count")
     private Long saleCount;
 
+    /** 浏览次数 */
+    @Column(name = "watch_count")
+    private Long watchCount;
+
     /** 评论总数 */
     @Column(name = "comment_count")
     private Long commentCount;
@@ -63,6 +67,9 @@ public class ItShopEo{
     @Column(name = "collection_count")
     private Long collectionCount;
 
+    /** 电话 */
+    @Column(name = "phone")
+    private String phone;
     /** 省编码 */
     @Column(name = "province_code")
     private String provinceCode;
@@ -130,6 +137,14 @@ public class ItShopEo{
     private Date updateTime;
     @Column
     private int dr;
+
+    public Long getWatchCount() {
+        return watchCount;
+    }
+
+    public void setWatchCount(Long watchCount) {
+        this.watchCount = watchCount;
+    }
 
     public String getIntroduction() {
         return introduction;
@@ -385,5 +400,13 @@ public class ItShopEo{
 
     public void setCommentScore(BigDecimal commentScore) {
         this.commentScore = commentScore;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -74,6 +74,9 @@ public class ShopServiceImpl implements IShopService {
         }
         itShopEo.setCreateTime(new Date());
         itShopEo.setUpdateTime(new Date());
+        itShopEo.setCommentCount(0l);
+        itShopEo.setSaleCount(0l);
+        itShopEo.setWatchCount(0l);
         this.addShop(itShopEo);
         List<ShopItemDto> itItemEos = shopEo.getItemList();
         List<ItShopBarberEo> itShopBarberEos = shopEo.getShopBarberList();
@@ -84,6 +87,7 @@ public class ShopServiceImpl implements IShopService {
                 itItemEo = new ItItemEo();
                 BeanUtils.copyProperties(item, itItemEo);
                 itItemEo.setShopId(itShopEo.getId());
+                itItemEo.setSalesCount(0l);
                 itItemEo.setUrl1(Constants.ITEM_IMAGE);
                 list.add(itItemEo);
             }
@@ -92,6 +96,7 @@ public class ShopServiceImpl implements IShopService {
         if (!CollectionUtils.isEmpty(itShopBarberEos)) {
             for (ItShopBarberEo item : itShopBarberEos) {
                 item.setShopId(itShopEo.getId());
+                item.setOrderCount(0);
                 item.setBarberImage(Constants.BARBER_IMAGE);
             }
             shopBarberService.addShopBarberList(itShopBarberEos);
@@ -119,6 +124,7 @@ public class ShopServiceImpl implements IShopService {
     @Override
     public ShopDetailDto getShopById(Long shopId) {
         ItShopEo shopEo = itShopRepository.findOne(shopId);
+        shopEo.setWatchCount(null == shopEo.getWatchCount() ? 1 : shopEo.getWatchCount() + 1l);
         ShopDetailDto detailDto = new ShopDetailDto();
         BeanUtils.copyProperties(shopEo, detailDto);
         List<ItItemEo> itItemEos = itItemService.findItemList(shopId);
@@ -126,6 +132,7 @@ public class ShopServiceImpl implements IShopService {
         detailDto.setEnvironmentImageList(getShopEnvironmentImage(shopEo));
         List<ItShopBarberEo> itShopBarberEos = shopBarberService.findShopBarberList(shopId);
         detailDto.setShopBarberList(itShopBarberEos);
+        itShopRepository.save(shopEo);
         return detailDto;
     }
 

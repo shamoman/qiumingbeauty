@@ -61,7 +61,9 @@ public abstract class AbstractRestLogAspect {
         }
         DateTime endTime = new DateTime();
         Interval interval = new Interval(startTime, endTime);
-        logger.info("日志统一打印 ===== {}.{}() end =====,响应时间:{}毫秒,响应内容:{}", new Object[]{point.getSignature().getDeclaringTypeName(), point.getSignature().getName(), interval.toDurationMillis(), this.argsToString(response)});
+        logger.info("日志统一打印 ===== {}.{}() end =====,响应时间:{}毫秒,响应内容:{}",
+                new Object[]{point.getSignature().getDeclaringTypeName(), point.getSignature().getName(),
+                        interval.toDurationMillis(), this.argsToString(response)});
         return response;
     }
 

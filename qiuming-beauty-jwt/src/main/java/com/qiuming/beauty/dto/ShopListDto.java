@@ -68,6 +68,8 @@ public class ShopListDto {
 
     private BigDecimal commentScore;
 
+    private Long watchCount;
+
     private byte[] shopImage;
     private Long id;
     /** 图片 */
@@ -271,5 +273,13 @@ public class ShopListDto {
 
     public void setCommentScore(BigDecimal commentScore) {
         this.commentScore = commentScore;
+    }
+
+    public Long getWatchCount() {
+        return watchCount;
+    }
+
+    public void setWatchCount(Long watchCount) {
+        this.watchCount = watchCount;
     }
 }

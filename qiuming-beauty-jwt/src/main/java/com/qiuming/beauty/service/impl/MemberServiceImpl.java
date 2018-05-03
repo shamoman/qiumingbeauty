@@ -12,6 +12,7 @@ import com.qiuming.beauty.service.IMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -74,6 +75,9 @@ public class MemberServiceImpl implements IMemberService {
     public UserDto getUserDetailByAccountId(Long accountId) {
         SysUser sysUser = sysUserRepository.findOne(accountId);
         SysUserInfoEo infoEo = sysUserInfoRepository.findSysUserInfoEoByAccountId(accountId);
+        if (null == infoEo){
+            throw new RuntimeException("用户信息不正确");
+        }
         return new UserDto(sysUser, infoEo);
     }
 
@@ -96,6 +100,12 @@ public class MemberServiceImpl implements IMemberService {
 
     @Override
     public List<SysUser> findAllUser() {
-        return sysUserRepository.findAll();
+        List<SysUser> sysUsers = sysUserRepository.findAll();
+        if (!CollectionUtils.isEmpty(sysUsers)){
+            for (SysUser item : sysUsers){
+                item.setPassword(null);
+            }
+        }
+        return sysUsers;
     }
 }

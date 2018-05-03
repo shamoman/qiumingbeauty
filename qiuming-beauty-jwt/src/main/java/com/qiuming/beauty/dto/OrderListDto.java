@@ -20,6 +20,38 @@ public class OrderListDto extends TrOrderEo {
 
     private String itemImage;
 
+    private String orderTimeStr;
+
+    private String finishTimeStr;
+
+    private String cancelTimeStr;
+
+    private boolean doComment;
+
+    public String getOrderTimeStr() {
+        return orderTimeStr;
+    }
+
+    public void setOrderTimeStr(String orderTimeStr) {
+        this.orderTimeStr = orderTimeStr;
+    }
+
+    public String getFinishTimeStr() {
+        return finishTimeStr;
+    }
+
+    public void setFinishTimeStr(String finishTimeStr) {
+        this.finishTimeStr = finishTimeStr;
+    }
+
+    public String getCancelTimeStr() {
+        return cancelTimeStr;
+    }
+
+    public void setCancelTimeStr(String cancelTimeStr) {
+        this.cancelTimeStr = cancelTimeStr;
+    }
+
     public String getItemName() {
         return itemName;
     }
@@ -34,5 +66,13 @@ public class OrderListDto extends TrOrderEo {
 
     public void setItemImage(String itemImage) {
         this.itemImage = itemImage;
+    }
+
+    public boolean isDoComment() {
+        return doComment;
+    }
+
+    public void setDoComment(boolean doComment) {
+        this.doComment = doComment;
     }
 }

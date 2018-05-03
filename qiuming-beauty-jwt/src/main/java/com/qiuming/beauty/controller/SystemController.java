@@ -7,7 +7,9 @@
 package com.qiuming.beauty.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.qiuming.beauty.constants.Constants;
 import com.qiuming.beauty.domain.SysUser;
+import com.qiuming.beauty.dto.ResetPwdDto;
 import com.qiuming.beauty.dto.RestResponse;
 import com.qiuming.beauty.dto.ShopAddDto;
 import com.qiuming.beauty.dto.ShopListDto;
@@ -23,6 +25,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.PipedWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -168,6 +171,16 @@ public class SystemController {
         Map result = new HashMap();
         result.put("list", sysUsers);
         return new RestResponse(result);
+    }
+
+    @RequestMapping(value = "/member/reset/password",method = RequestMethod.POST)
+    public RestResponse resetPassword(@RequestBody ResetPwdDto pwdDto){
+        logger.info("重置用户密码 | {}", JSON.toJSONString(pwdDto));
+        if (null == pwdDto || null == (pwdDto.getAccountId())){
+            return new RestResponse(-1, "账号id不能为空");
+        }
+        memberService.resetPwd(pwdDto.getAccountId(), Constants.DEFAULT_PASSWORD);
+        return RestResponse.SUCCESS;
     }
 
 }
