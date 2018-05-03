@@ -82,6 +82,10 @@ public class MemberController {
         if (dto.getUsername().equalsIgnoreCase(Constants.ADMIN)){
             return new RestResponse(-1, "用户名非法");
         }
+        SysUser sysUser = memberService.getMemberInfoByUserName(dto.getUsername());
+        if (null != sysUser){
+            return new RestResponse(-1, "该用户已经注册");
+        }
         memberService.addSysUser(dto);
         return  RestResponse.SUCCESS;
     }

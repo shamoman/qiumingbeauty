@@ -6,6 +6,7 @@
  */
 package com.qiuming.beauty.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.qiuming.beauty.domain.SysUser;
 import com.qiuming.beauty.dto.LoginDto;
 import com.qiuming.beauty.dto.RestResponse;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +43,7 @@ public class LoginController {
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @CrossOrigin
     public RestResponse login(HttpServletResponse res,  @RequestBody LoginDto dto) {
-        logger.info("登陆参数 | {}", dto);
+        logger.info("登陆参数 | {}", JSON.toJSONString(dto));
         if (null == dto || StringUtils.isEmpty(dto.getUsername()) || StringUtils.isEmpty(dto.getPassword())){
             return new RestResponse(-1, "请输入正确的用户名密码");
         }
