@@ -6,17 +6,15 @@
  */
 package com.qiuming.beauty.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.qiuming.beauty.config.TokenAuthenticationService;
 import com.qiuming.beauty.constants.Constants;
 import com.qiuming.beauty.constants.ExceptionEnum;
 import com.qiuming.beauty.domain.SysUser;
+import com.qiuming.beauty.dto.PasswordDto;
 import com.qiuming.beauty.dto.RegisterDto;
 import com.qiuming.beauty.dto.RestResponse;
 import com.qiuming.beauty.dto.UserDto;
 import com.qiuming.beauty.service.IMemberService;
-import org.springframework.orm.hibernate3.SessionHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +65,27 @@ public class MemberController {
         userDto.setAccountId(userId);
         memberService.updateUserDetail(userDto);
         return  new RestResponse(-1, "该用户名已经注册！");
+    }
+
+    @RequestMapping(value = "/update/password",method = RequestMethod.PUT)
+    public RestResponse updateMemberPassword(HttpServletRequest request, @RequestBody PasswordDto passwordDto) {
+        if (null == passwordDto){
+            return new RestResponse(-1, "参数异常");
+        }
+        Long userId = TokenAuthenticationService.getUserId(request);
+        SysUser userDto = memberService.getMemberInfoById(userId);
+
+        if (StringUtils.isEmpty(passwordDto.getComfirmPwd()) || !passwordDto.getComfirmPwd().equals(passwordDto.getOldPassword())){
+            return new RestResponse(-1, "两次密码输入不一致");
+        }
+        if (null == passwordDto.getPassword()){
+            return new RestResponse(-1, "旧密码输入错误");
+        }
+        if (!userDto.getPassword().equals(passwordDto.getOldPassword())){
+            return new RestResponse(-1, "旧密码输入错误");
+        }
+        memberService.resetPwd(userDto.getId(), passwordDto.getPassword());
+        return  RestResponse.SUCCESS;
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
