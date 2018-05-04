@@ -10,10 +10,7 @@ import com.qiuming.beauty.constants.Constants;
 import com.qiuming.beauty.constants.OrderStatusEnum;
 import com.qiuming.beauty.dto.*;
 import com.qiuming.beauty.eo.*;
-import com.qiuming.beauty.repository.ItItemRepository;
-import com.qiuming.beauty.repository.ItShopRepository;
-import com.qiuming.beauty.repository.ShopBarberRepository;
-import com.qiuming.beauty.repository.TrOrderRepository;
+import com.qiuming.beauty.repository.*;
 import com.qiuming.beauty.service.ICommentService;
 import com.qiuming.beauty.service.ITrOderService;
 import org.slf4j.Logger;
@@ -48,6 +45,8 @@ public class TrOrderServiceImpl implements ITrOderService {
     private ItShopRepository itShopRepository;
     @Resource
     private ICommentService commentService;
+    @Resource
+    private ConfigRepository configRepository;
 
     @Override
     public AppToPayOrderRespDto submitOrder(OrderSubmitDto dto) {
@@ -58,6 +57,10 @@ public class TrOrderServiceImpl implements ITrOderService {
         orderEo.setStatus(OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus());
         ItShopEo shopEo = itShopRepository.findOne(dto.getShopId());
         orderEo.setShopName(shopEo.getShopName());
+        ItItemEo itItemEo = itItemRepository.findOne(dto.getItemId());
+        if (null != itItemEo){
+            orderEo.setItemName(itItemEo.getName());
+        }
         trOrderRepository.save(orderEo);
         AppToPayOrderRespDto toPayOrderRespDto = new AppToPayOrderRespDto();
         toPayOrderRespDto.setOrderNo(orderEo.getOrderNo());
@@ -95,7 +98,7 @@ public class TrOrderServiceImpl implements ITrOderService {
             for (TrOrderEo item : orderEoList) {
                 dto = new OrderListDto();
                 BeanUtils.copyProperties(item, dto);
-                List<SysUserCommentEo> list = commentService.findCommentBymemberIdAndOrderId(memberId, item.getId());
+                List<SysUserCommentEo> list = commentService.findCommentBymemberIdAndOrderId(item.getId(), memberId);
                 if (!CollectionUtils.isEmpty(list)) {
                     dto.setDoComment(false);
                 } else {
@@ -154,15 +157,31 @@ public class TrOrderServiceImpl implements ITrOderService {
     }
 
     private String getOrderNo() {
-        logger.info("当前订单号1 | {}", Constants.ORDER_NUMBER);
-        String memberCnNo = "CN" + String.format("%08d", Constants.ORDER_NUMBER);
-        Constants.setOrderNumber(Constants.ORDER_NUMBER++);
-        logger.info("当前订单号2 | {}", Constants.ORDER_NUMBER);
+        MaConfigEo configEo = configRepository.findByCode(Constants.ORDER_NUMBER_CODE);
+        if (configEo == null){
+            configEo = new MaConfigEo();
+            configEo.setCode(Constants.ORDER_NUMBER_CODE);
+            configEo.setLongValue(1l);
+            configEo.setStatus(1);
+        }
+        Long number = null != configEo.getLongValue() ? configEo.getLongValue() : 1;
+        logger.info("当前订单号1 | {}", number);
+        String memberCnNo = "CN" + String.format("%08d", number);
+        configEo.setLongValue(number + 1);
+        configRepository.save(configEo);
+        logger.info("当前订单号2 | {}", configEo.getLongValue());
         return memberCnNo;
     }
 
     private String getOrderPayFlowNo() {
-        String orderFlow = getCurrentTimeNum() + String.format("%03d", Constants.ORDER_NUMBER);
+        MaConfigEo configEo = configRepository.findByCode(Constants.PAY_FLOW_NO);
+        if (configEo != null){
+            configEo = new MaConfigEo();
+            configEo.setCode(Constants.PAY_FLOW_NO);
+            configEo.setLongValue(1l);
+            configEo.setStatus(1);
+        }
+        String orderFlow = getCurrentTimeNum() + String.format("%03d", Constants.PAY_FLOW_NO);
         logger.info("当前订单号2 | {}", orderFlow);
         return orderFlow;
     }

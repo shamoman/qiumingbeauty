@@ -7,6 +7,7 @@
 package com.qiuming.beauty.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,9 +24,17 @@ public class CommentAddDto extends BaseVo {
 
     private Long shopId;
 
+    private String itemName;
+
     private Long accountId;
 
     private BigDecimal score;
+
+    private String avatarUrl;
+
+    private String userName;
+
+    private Date createTime;
 
     List<String> commentImage;
 
@@ -75,5 +84,37 @@ public class CommentAddDto extends BaseVo {
 
     public void setScore(BigDecimal score) {
         this.score = score;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }

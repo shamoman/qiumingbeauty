@@ -6,8 +6,11 @@
  */
 package com.qiuming.beauty.eo;
 
+import com.qiuming.beauty.dto.BaseVo;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
@@ -17,7 +20,7 @@ import java.math.BigDecimal;
  **/
 @Entity
 @Table(name = "sys_user_comment")
-public class SysUserCommentEo extends BaseEo {
+public class SysUserCommentEo extends BaseVo {
 
     @Column(name = "account_id")
     private Long accountId;
@@ -28,13 +31,15 @@ public class SysUserCommentEo extends BaseEo {
     @Column(name = "item_id")
     private Long itemId;
     @Column(name = "item_name")
-    private Long itemName;
+    private String itemName;
     @Column(name = "item_title")
     private String itemTitle;
     @Column(name = "remark")
     private String remark;
     @Column(name = "content")
     private String content;
+    @Column(name = "user_name")
+    private String userName;
     @Column(name = "score")
     private BigDecimal score;
     @Column(name = "url1")
@@ -46,6 +51,21 @@ public class SysUserCommentEo extends BaseEo {
     @Id
     @GeneratedValue
     private Long id;
+
+
+    @Column(name = "create_person")
+    private String createPerson;
+    @Column(name = "create_time")
+    private Date createTime;
+    @Column(name = "update_person")
+    private String updatePerson;
+    @Column(name = "update_time")
+    private Date updateTime;
+    @Column
+    private int dr;
+
+
+
     public Long getId() {
         return id;
     }
@@ -85,11 +105,11 @@ public class SysUserCommentEo extends BaseEo {
         this.itemId = itemId;
     }
 
-    public Long getItemName() {
+    public String getItemName() {
         return itemName;
     }
 
-    public void setItemName(Long itemName) {
+    public void setItemName(String itemName) {
         this.itemName = itemName;
     }
 
@@ -147,5 +167,53 @@ public class SysUserCommentEo extends BaseEo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCreatePerson() {
+        return createPerson;
+    }
+
+    public void setCreatePerson(String createPerson) {
+        this.createPerson = createPerson;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdatePerson() {
+        return updatePerson;
+    }
+
+    public void setUpdatePerson(String updatePerson) {
+        this.updatePerson = updatePerson;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public int getDr() {
+        return dr;
+    }
+
+    public void setDr(int dr) {
+        this.dr = dr;
     }
 }

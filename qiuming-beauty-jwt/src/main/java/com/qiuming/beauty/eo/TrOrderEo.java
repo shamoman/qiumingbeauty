@@ -31,6 +31,9 @@ public class TrOrderEo extends BaseEo {
     /** 店铺名 */
     @Column(name = "shop_name")
     private String shopName;
+
+    @Column(name = "item_name")
+    private String itemName;
     /** 商品ID */
     @Column(name = "item_id")
     private Long itemId;
@@ -271,5 +274,13 @@ public class TrOrderEo extends BaseEo {
 
     public void setCancelDesc(String cancelDesc) {
         this.cancelDesc = cancelDesc;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }

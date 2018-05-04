@@ -8,4 +8,5 @@ public interface SysUserRepository extends JpaRepository<SysUser, Long> {
     SysUser findByUsername(String username);
 
     SysUser findByUsernameAndPassword(String name, String password);
+
 }
