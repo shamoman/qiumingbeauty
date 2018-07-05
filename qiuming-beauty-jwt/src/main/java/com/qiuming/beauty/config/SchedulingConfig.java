@@ -38,20 +38,20 @@ public class SchedulingConfig {
     @Resource
     private TrOrderRepository trOrderRepository;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每2分钟执行一次
-    public void getToken() {
-        logger.info("取消订单----定时任务启动");
-        Date date = new Date(new Date().getTime() - 2 * 60 *1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        logger.info("取消时间 | {}", sdf.format(date));
-
-        List<TrOrderEo> orderEoList = trOrderRepository.findAllByStatusAndOrderTimeBefore(OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus(), date);
-        logger.info("要取消的订单 | {}", JSON.toJSONString(orderEoList));
-        for (TrOrderEo item : orderEoList){
-            item.setStatus(OrderStatusEnum.ORDER_STATUS_CANCEL.getStatus());
-            item.setCancelTime(new Date());
-            item.setCancelType("长时间未支付");
-            trOrderRepository.save(item);
-        }
-    }
+//    @Scheduled(cron = "0 0/10 * * * ?") // 每2分钟执行一次
+//    public void getToken() {
+//        logger.info("取消订单----定时任务启动");
+//        Date date = new Date(new Date().getTime() - 2 * 60 *1000);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        logger.info("取消时间 | {}", sdf.format(date));
+//
+//        List<TrOrderEo> orderEoList = trOrderRepository.findAllByStatusAndOrderTimeBefore(OrderStatusEnum.ORDER_STATUS_DEFAULT.getStatus(), date);
+//        logger.info("要取消的订单 | {}", JSON.toJSONString(orderEoList));
+//        for (TrOrderEo item : orderEoList){
+//            item.setStatus(OrderStatusEnum.ORDER_STATUS_CANCEL.getStatus());
+//            item.setCancelTime(new Date());
+//            item.setCancelType("长时间未支付");
+//            trOrderRepository.save(item);
+//        }
+//    }
 }

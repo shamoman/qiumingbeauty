@@ -8,7 +8,6 @@ package com.qiuming.beauty.service.impl;
 
 import com.qiuming.beauty.domain.SysUser;
 import com.qiuming.beauty.dto.CommentAddDto;
-import com.qiuming.beauty.dto.UserDto;
 import com.qiuming.beauty.eo.ItShopEo;
 import com.qiuming.beauty.eo.SysUserCommentEo;
 import com.qiuming.beauty.eo.SysUserInfoEo;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;

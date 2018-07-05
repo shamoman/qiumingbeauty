@@ -1,19 +1,28 @@
 package com.qiuming.beauty.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.qiuming.beauty.dto.CommentAddDto;
-import com.qiuming.beauty.dto.OrderSubmitDto;
-import com.qiuming.beauty.dto.RestResponse;
-import com.qiuming.beauty.dto.UserDto;
+import com.alibaba.fastjson.JSONObject;
+import com.qiuming.beauty.dto.*;
 import com.qiuming.beauty.eo.ItItemEo;
 import com.qiuming.beauty.eo.ItShopBarberEo;
 import com.qiuming.beauty.eo.ItShopEo;
+import com.qiuming.beauty.utils.HttpClientUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author shilei
@@ -27,75 +36,151 @@ public class HelloController {
         return "HELLO, THIS IS QIU MING BEAUTY SHOPPING CART";
     }
 
+    @RequestMapping("/facebook/login")
+    public RestResponse testFaceBook(String code){
+//        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef",code);
+        ThirdUserInfoDto result = getUserInfo("EAACrjTWjoh4BAG2mjEZCZCQ124uyRhZBF02iwgZC6Ef5ngV47eT5jtjOpeWQsjFI96irGdoA8nsAngWoAJf8BR1hhM5SQYzTgL7SXVbo61OOFgJQKj910cE7jKaS7FJbtNDKZABEgMgCLXgvMoSSPUuZAkezzmf9mcCtIqbRdIRgc5A0zCccVUCW0C4KEpc8WLgJHlnCqth1yD1DqP5xRB");
+        return new RestResponse(result);
+    }
+
+    public static void main(String[] args) {
+        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef","");
+
+        getUserInfo(oauthDto.getAccessToken());
+    }
+
+    public static ThirdUserInfoDto getUserInfo(String accessToken) {
+        String fields = "id,name,birthday,gender,hometown";
+        StringBuilder params = new StringBuilder("https://graph.facebook.com/oauth/access_token");
+        params.append("?access_token=").append(accessToken);
+        params.append("&fields=").append(fields);
+        String resultJson = null;
+        try {
+            resultJson = HttpClientUtil.sendRequest(params.toString(),null, 1000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject jsonObject = JSON.parseObject(resultJson);
+        ThirdUserInfoDto dto = new ThirdUserInfoDto();
+        dto.setOpenId((String)jsonObject.get("id"));
+        dto.setNickName((String)jsonObject.get("name"));
+        dto.setChannelName("facebook");
+        dto.setThirdToken(accessToken);
+        return dto;
+    }
+
+
+    public static ThirdOauthDto getOauthToken(String appId, String appSecret, String code) {
+        StringBuilder params = new StringBuilder();
+        params.append("https://graph.facebook.com/v3.0/oauth/access_token");
+        params.append("?client_id=").append(appId);
+        params.append("&client_secret=").append(appSecret);
+        params.append("&code=").append(code);
+//        System.out.println("FaceBook回调URI:{}", VariableConstants.REDIRECT_URI_FACEBOOK);
+//        params.append("&redirect_uri=").append(VariableConstants.REDIRECT_URI_FACEBOOK);
+        String resultJson = null;
+        try {
+            resultJson = HttpClientUtil.sendRequest(params.toString(), null,10000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("===获取FaceBook授权信息 getOauthToken resultJson = {}" + resultJson);
+        if (resultJson.contains("callback")) {
+//            logger.error("===获取Facebook授权信息 getOauthToken resultJson = {}", resultJson);
+            return null;
+        } else {
+            ThirdOauthDto thirdOauthDto = new ThirdOauthDto();
+            String[] oauthResult = resultJson.split("&");
+            Map<String, String> paramMap = new HashMap(20);
+            String[] var8 = oauthResult;
+            int var9 = oauthResult.length;
+
+            for(int var10 = 0; var10 < var9; ++var10) {
+                String param = var8[var10];
+                int index = param.indexOf("=");
+                if (-1 != index) {
+                    paramMap.put(param.substring(0, index), param.substring(index + 1));
+                }
+            }
+//
+            thirdOauthDto.setAccessToken((String)paramMap.get("access_token"));
+            thirdOauthDto.setExpiresIn(Integer.valueOf((String)paramMap.get("expires_in")));
+            thirdOauthDto.setRefreshToken((String)paramMap.get("refresh_token"));
+            return thirdOauthDto;
+        }
+    }
+
     @RequestMapping("/users")
     public String getUsers() {
         return "{\"users\":[{\"firstname\":\"Richard\", \"lastname\":\"Feynman\"}," +
                 "{\"firstname\":\"Marie\",\"lastname\":\"Curie\"}]}";
     }
 
-    public static void main(String[] args) {
-        CommentAddDto commentAddDto = new CommentAddDto();
-        commentAddDto.setCommentImage(new ArrayList<>());
-        commentAddDto.setOrderId(1l);
-        commentAddDto.setRemark("店长很热心，洗头很舒服，造型也很合适，5星");
-        commentAddDto.setScore(new BigDecimal(5));
-        commentAddDto.setShopId(1l);
-        System.out.println(JSON.toJSONString(commentAddDto));
-        OrderSubmitDto orderSubmitDto = new OrderSubmitDto();
-        orderSubmitDto.setItemId(1L);
-        orderSubmitDto.setShopId(13L);
-        orderSubmitDto.setRemark("请一位美女给我洗头");
-        orderSubmitDto.setPayAmount(new BigDecimal(80));
-        orderSubmitDto.setCouponAmount(new BigDecimal(20));
-        orderSubmitDto.setMoneyFee(new BigDecimal(100));
-        orderSubmitDto.setItemAmoun(new BigDecimal(100));
-        System.out.println(JSON.toJSONString(orderSubmitDto));
-
-        ItItemEo itItemEo = new ItItemEo();
-
-        itItemEo.setName("单人日式高端丝绸睫毛嫁接");
-        itItemEo.setShopId(1l);
-        itItemEo.setPrice(new BigDecimal(100));
-        itItemEo.setShopPrice(new BigDecimal(800));
-        System.out.println(JSON.toJSONString(itItemEo));
-
-        /**
-         * 单人日式高端丝绸睫毛嫁接
-         * 已售0截止日期: 2018年8月26日
-         * ¥198门店价528
-         */
-
-        UserDto dto = new UserDto();
-        dto.setAccountId(1l);
-        dto.setAvatarUrl(new String("hah"));
-        dto.setCreateTime(new Date());
-        dto.setMobile("18814187970");
-        dto.setUsername("jiyongiangusername");
-        RestResponse restResponse = new RestResponse(dto);
-        System.out.println(JSON.toJSONString(restResponse));
-
-
-        ItShopBarberEo shopBarberEo = new ItShopBarberEo();
-
-        shopBarberEo.setShopId(1L);
-        shopBarberEo.setMotto("天生我才必有用，我就是个人才");
-        shopBarberEo.setAppointTips(new BigDecimal(20));
-        shopBarberEo.setGrade("经理");
-        shopBarberEo.setTimes("三年");
-        shopBarberEo.setName("pingTang");
-//        shopBarberEo.set
-        shopBarberEo.setWorkTime("周一至周六下午 9：00 -- 21：00");
-        System.out.println(JSON.toJSONString(shopBarberEo));
-
-        ItShopEo eo = new ItShopEo();
-        eo.setShopName("东方发");
-        eo.setBrandName("东方");
-        eo.setAddress("鱼珠智谷");
-        eo.setProvinceCode("");
-        eo.setCityCode("");
-        eo.setAreaCode("");
-        eo.setStreetCode("");
-        eo.setIntroduction("时尚 前沿 引领");
-        System.out.println(JSON.toJSONString(eo));
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public RestResponse upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        if(!file.isEmpty()) {
+        }
+        System.out.println("file | " + JSON.toJSONString(file));
+        Workbook workbook = null;
+        File file1 = null;
+        try {
+            String filePath = request.getSession().getServletContext().getRealPath("/") + "resource/";
+            File targetFile = new File(filePath);
+            if(!targetFile.exists()){
+                targetFile.mkdirs();
+            }
+            FileOutputStream out = new FileOutputStream(filePath + file.getOriginalFilename());
+            out.write(file.getBytes());
+            out.flush();
+            out.close();
+            file1 = new File(filePath + file.getOriginalFilename());
+//            InputStream fileInputStream = file.getInputStream();
+            FileInputStream fileInputStream = new FileInputStream(file1);
+            workbook = new XSSFWorkbook(fileInputStream);
+        } catch (IOException e) {
+//            logger.info("上传excel 文件转换报错----------------- | {}", e.getMessage());
+            e.printStackTrace();
+        }
+        Sheet sheet = workbook.getSheet("Sheet1");
+        Integer romLength = sheet.getLastRowNum();
+        System.out.println("行数" + romLength);
+        Row row;
+        String userName;
+        String mobile;
+        Map dto;
+        List<Map> dtos = new ArrayList<>();
+        int i = 1;
+        try {
+            for (i = 1; i < romLength; i++) {
+                dto = new HashMap();
+                row = sheet.getRow(i);
+                userName = getUserNameDto(row.getCell(0));
+                mobile = getUserNameDto(row.getCell(1));
+                if (StringUtils.isEmpty(userName) && StringUtils.isEmpty(mobile)) {
+                    break;
+                }
+                dto.put("userName", userName);
+                dto.put("mobile", mobile);
+                dtos.add(dto);
+            }
+            System.out.println(JSON.toJSONString(dtos));
+        } catch (Exception e) {
+            System.out.println(("第{}行解析错误" + i));
+            e.printStackTrace();
+        } finally {
+            file1.delete();
+        }
+        return null;
     }
+
+    private String getUserNameDto(Cell cell){
+        String result = null;
+        if (CellType.NUMERIC == cell.getCellTypeEnum()) {
+            result = String.valueOf(cell.getNumericCellValue());
+        } else {
+            result = cell.getStringCellValue();
+        }
+        return result;
+    }
+
 }

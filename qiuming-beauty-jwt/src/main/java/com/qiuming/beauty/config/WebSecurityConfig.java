@@ -35,6 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/username/exit").permitAll()
 //                .antMatchers("/**/order/**").permitAll()
                 .antMatchers("/**/login/**").permitAll()
+                .antMatchers("/**/upload").permitAll()
+                .antMatchers("/**/facebook/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // We filter the api/login requests
