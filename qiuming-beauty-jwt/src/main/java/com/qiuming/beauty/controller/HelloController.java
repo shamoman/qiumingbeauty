@@ -3,6 +3,7 @@ package com.qiuming.beauty.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qiuming.beauty.dto.*;
+import com.qiuming.beauty.eo.AgeLocMeRecordEo;
 import com.qiuming.beauty.eo.ItItemEo;
 import com.qiuming.beauty.eo.ItShopBarberEo;
 import com.qiuming.beauty.eo.ItShopEo;
@@ -38,22 +39,24 @@ public class HelloController {
 
     @RequestMapping("/facebook/login")
     public RestResponse testFaceBook(String code){
-//        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef",code);
-        ThirdUserInfoDto result = getUserInfo("EAACrjTWjoh4BAG2mjEZCZCQ124uyRhZBF02iwgZC6Ef5ngV47eT5jtjOpeWQsjFI96irGdoA8nsAngWoAJf8BR1hhM5SQYzTgL7SXVbo61OOFgJQKj910cE7jKaS7FJbtNDKZABEgMgCLXgvMoSSPUuZAkezzmf9mcCtIqbRdIRgc5A0zCccVUCW0C4KEpc8WLgJHlnCqth1yD1DqP5xRB");
-        return new RestResponse(result);
+        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef",code);
+//        ThirdUserInfoDto result = getUserInfo("EAACrjTWjoh4BAG2mjEZCZCQ124uyRhZBF02iwgZC6Ef5ngV47eT5jtjOpeWQsjFI96irGdoA8nsAngWoAJf8BR1hhM5SQYzTgL7SXVbo61OOFgJQKj910cE7jKaS7FJbtNDKZABEgMgCLXgvMoSSPUuZAkezzmf9mcCtIqbRdIRgc5A0zCccVUCW0C4KEpc8WLgJHlnCqth1yD1DqP5xRB");
+        return new RestResponse(oauthDto);
     }
-
-    public static void main(String[] args) {
+//
+//    public static void main(String[] args) {
 //        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef","");
-        System.out.println("test just so so");
+//
 //        getUserInfo(oauthDto.getAccessToken());
-    }
+//    }
 
     public static ThirdUserInfoDto getUserInfo(String accessToken) {
         String fields = "id,name,birthday,gender,hometown";
-        StringBuilder params = new StringBuilder("https://graph.facebook.com/oauth/access_token");
+        StringBuilder params = new StringBuilder("https://graph.facebook.com/me");
         params.append("?access_token=").append(accessToken);
         params.append("&fields=").append(fields);
+
+        System.out.println("|  " + params.toString());
         String resultJson = null;
         try {
             resultJson = HttpClientUtil.sendRequest(params.toString(),null, 1000);
@@ -77,7 +80,8 @@ public class HelloController {
         params.append("&client_secret=").append(appSecret);
         params.append("&code=").append(code);
 //        System.out.println("FaceBook回调URI:{}", VariableConstants.REDIRECT_URI_FACEBOOK);
-//        params.append("&redirect_uri=").append(VariableConstants.REDIRECT_URI_FACEBOOK);
+        params.append("&redirect_uri=").append("https://nutowntest.cn.nuskin.com/shop/home");
+        System.out.println(params.toString());
         String resultJson = null;
         try {
             resultJson = HttpClientUtil.sendRequest(params.toString(), null,10000);
@@ -114,6 +118,18 @@ public class HelloController {
     public String getUsers() {
         return "{\"users\":[{\"firstname\":\"Richard\", \"lastname\":\"Feynman\"}," +
                 "{\"firstname\":\"Marie\",\"lastname\":\"Curie\"}]}";
+    }
+
+    public static void main(String[] args) {
+        AgeLocMeRecordEo ageLocMeRecordEo = new AgeLocMeRecordEo();
+        ageLocMeRecordEo.setLanguage("en");
+        ageLocMeRecordEo.setBaiduLat("1.002234");
+        ageLocMeRecordEo.setSkinCombination(1);
+        ageLocMeRecordEo.setDayFragrance(1);
+        ageLocMeRecordEo.setDayMoisturizer(0);
+        ageLocMeRecordEo.setSkinSomeRough(1);
+        ageLocMeRecordEo.setAha(1);
+        System.out.println(ageLocMeRecordEo.toString());
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -172,7 +188,6 @@ public class HelloController {
         }
         return null;
     }
-
 
     private String getUserNameDto(Cell cell){
         String result = null;
