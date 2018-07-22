@@ -44,9 +44,9 @@ public class HelloController {
     }
 
     public static void main(String[] args) {
-        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef","");
-
-        getUserInfo(oauthDto.getAccessToken());
+//        ThirdOauthDto oauthDto = getOauthToken("188622978654750","c6d572ba550b3883d0d0c26f171e8eef","");
+        System.out.println("test just so so");
+//        getUserInfo(oauthDto.getAccessToken());
     }
 
     public static ThirdUserInfoDto getUserInfo(String accessToken) {
@@ -172,6 +172,7 @@ public class HelloController {
         }
         return null;
     }
+
 
     private String getUserNameDto(Cell cell){
         String result = null;
